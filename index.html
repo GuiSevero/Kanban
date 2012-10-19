@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Kanban</title>
+<style>
+    body {
+        background: #DDD;
+        margin: 0;
+    }
+</style>
+
+</head>
+
+
+<body>
+
+<a href="#" id="connect"> Connect </a>
+
+<div id="activitys"></div>
+<form id="#activity">
+     <label for="txtTitle"><b>Title</b></label><br>
+     <input type="text" id="txtTitle" name="title" /><br>
+     <label for="txtDescription"><b>Description</b></label><br>
+    <textarea id="txtDescription" cols="30" rows="10" name="description"></textarea><br>
+    <input type="button" id="btnSendActivity" value="Send Activity" />
+</form>
+
+
+
+
+
+<!-- SCRIPTS -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>
+(function(){
+    
+     var socket = io && io.connect('http://localhost')
+     , btnConnect = $('#connect')
+     , btnSendActivity = $('#btnSendActivity')
+     , username = "gorder"
+
+
+     btnConnect.click(function(){
+        
+            socket.emit('username', username)
+     })
+
+      socket.on('getactivity', function(activity){
+
+      $('#activitys').append(activity)
+      console.log(activity)
+    })
+
+   
+    $('#btnSendActivity').click(function() {
+        
+        var data = {
+              'title' : $('#txtTitle').val()
+            , 'description': $('#txtDescription').val()
+        }
+        
+         socket.emit('send', data)
+         socket.emit('username', username)
+         
+         
+        return false;
+});
+
+
+}())
+</script>
+</body>
+</html>
